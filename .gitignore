@@ -5,3 +5,4 @@
 target
 *.iml
 checlpoint/*
+dependency-reduced-pom.xml
