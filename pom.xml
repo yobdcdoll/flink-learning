@@ -27,10 +27,27 @@ under the License.
 
     <name>Flink Learning</name>
     <url>https://flink.apache.org</url>
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <scope.type>provided</scope.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <scope.type>compile</scope.type>
+            </properties>
+        </profile>
+    </profiles>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scope.type>provided</scope.type>
+<!--        <scope.type>provided</scope.type>-->
 <!--        <scope.type>compile</scope.type>-->
         <flink.version>1.11.1</flink.version>
         <hive.version>1.2.2</hive.version>
@@ -73,6 +90,12 @@ under the License.
 
         <dependency>
             <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+            <scope>${scope.type}</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-hive_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
             <scope>${scope.type}</scope>
@@ -82,6 +105,11 @@ under the License.
             <artifactId>flink-hadoop-compatibility_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
 <!--            <scope>${scope.type}</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-jdbc_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
         </dependency>
 
         <dependency>
@@ -106,9 +134,19 @@ under the License.
         </dependency>
 
         <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.49</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-jdbc-client</artifactId>
+            <version>3.9.2</version>
         </dependency>
 
         <dependency>
