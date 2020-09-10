@@ -38,7 +38,7 @@ public class KafkaTableTest {
                 ",itemId bigint" +
                 ",createTime bigint" +
                 ",proc_time as proctime()"+
-//                ",eventTime as to_timestamp(from_unixtime(createTime/1000, 'yyyy-MM-dd HH:m:ss'))"+
+//                ",proc_time as to_timestamp(from_unixtime(createTime/1000, 'yyyy-MM-dd HH:m:ss'))"+
 //                ",watermark for eventTime as eventTime - interval '5' second"+
                 ") with (" +
                 "'connector' = 'kafka'" +
@@ -54,7 +54,7 @@ public class KafkaTableTest {
                 ",name string" +
                 ",age int" +
                 ",city string" +
-//                ",primary key (userId) not enforced" +
+                ",primary key (userId) not enforced" +
                 ") with (" +
                 "'connector' = 'jdbc'" +
                 ",'url' = 'jdbc:mysql://localhost:3306/dbmeta'" +

@@ -28,7 +28,6 @@ public class AsyncSourceTest {
         String groupId = parameterTool.get("kafka.group.id");
         String topic = parameterTool.get("kafka.topic");
 
-
         Properties props = new Properties();
         props.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
