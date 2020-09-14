@@ -2,6 +2,7 @@ package com.yobdcdoll.async;
 
 import com.yobdcdoll.model.Order;
 import com.yobdcdoll.source.JdbcSourceTest;
+import com.yobdcdoll.source.OrderKafkaDeserializationSchema;
 import com.yobdcdoll.util.PropConstant;
 import org.apache.flink.api.java.tuple.Tuple6;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -26,7 +27,7 @@ public class AsyncSourceTest {
 
         String bootstrapServers = parameterTool.get("kafka.bootstrap.servers");
         String groupId = parameterTool.get("kafka.group.id");
-        String topic = parameterTool.get("kafka.topic");
+        String topic = parameterTool.get("kafka.topic.orders");
 
         Properties props = new Properties();
         props.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);

@@ -12,15 +12,18 @@ import java.util.Random;
 
 /**
  * kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders
+ * kafka-topics.sh --bootstrap-server localhost:9092 --create --topic shipments
+ * 生成订单和物流信息
  */
-public class KafkaSource {
+public class KafkaOrderSource {
     public static void main(String[] args) throws IOException {
         ParameterTool parameterTool = ParameterTool.fromPropertiesFile(
                 JdbcSourceTest.class.getResourceAsStream(PropConstant.APPLICATION_PROPERTIES)
         ).mergeWith(ParameterTool.fromArgs(args));
 
         String bootstrapServers = parameterTool.get("kafka.bootstrap.servers");
-        String topic = parameterTool.get("kafka.topic");
+        String orderTopic = parameterTool.get("kafka.topic.orders");
+        String shipmentTopic = parameterTool.get("kafka.topic.shipments");
         Long producerInterval = parameterTool.getLong("kafka.interval");
         Long maxCount = parameterTool.getLong("kafka.maxCount");
 
@@ -33,12 +36,23 @@ public class KafkaSource {
 
         int count = 0;
         while (count < maxCount) {
-            String msg = buildOrder();
-            producer.send(new ProducerRecord<String, String>(topic, msg)
+            Date now = new Date();
+            String order = buildOrder(now);
+            producer.send(new ProducerRecord<String, String>(orderTopic, order)
                     , new Callback() {
                         @Override
                         public void onCompletion(RecordMetadata metadata, Exception exception) {
-                            System.out.println("Send message: " + msg);
+                            System.out.println("Send order: " + order);
+                        }
+                    }
+            );
+
+            String shipment = buildShipment(now);
+            producer.send(new ProducerRecord<String, String>(shipmentTopic, shipment)
+                    , new Callback() {
+                        @Override
+                        public void onCompletion(RecordMetadata metadata, Exception exception) {
+                            System.out.println("Send shipment: " + order);
                         }
                     }
             );
@@ -51,10 +65,10 @@ public class KafkaSource {
         producer.close();
     }
 
-    private static String buildOrder() {
+    private static String buildOrder(Date currentTime) {
         String splitter = ",";
         Random rand = new Random();
-        Date now = new Date();
+        Date now = currentTime;
         Long orderId = now.getTime();
         int userId = rand.nextInt(100) + 1;
         int itemId = rand.nextInt(1000) + 1;
@@ -66,6 +80,25 @@ public class KafkaSource {
         str.append(userId);
         str.append(splitter);
         str.append(itemId);
+        str.append(splitter);
+        str.append(createTime);
+
+        return str.toString();
+    }
+
+
+    private static String buildShipment(Date currentTime) {
+        String splitter = ",";
+        Random rand = new Random();
+        Date now = currentTime;
+        Long orderId = now.getTime();
+        Long shipmentId = now.getTime() + rand.nextInt(5000);
+        Long createTime = shipmentId;
+
+        StringBuilder str = new StringBuilder();
+        str.append(shipmentId);
+        str.append(splitter);
+        str.append(orderId);
         str.append(splitter);
         str.append(createTime);
 

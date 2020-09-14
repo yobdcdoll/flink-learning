@@ -1,4 +1,4 @@
-package com.yobdcdoll.async;
+package com.yobdcdoll.source;
 
 import com.yobdcdoll.model.Order;
 import org.apache.flink.api.common.typeinfo.TypeInformation;

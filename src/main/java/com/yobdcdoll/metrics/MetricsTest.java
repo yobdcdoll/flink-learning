@@ -1,7 +1,7 @@
 package com.yobdcdoll.metrics;
 
 import com.codahale.metrics.SlidingWindowReservoir;
-import com.yobdcdoll.async.OrderKafkaDeserializationSchema;
+import com.yobdcdoll.source.OrderKafkaDeserializationSchema;
 import com.yobdcdoll.model.Order;
 import com.yobdcdoll.source.JdbcSourceTest;
 import com.yobdcdoll.util.PropConstant;
@@ -28,7 +28,7 @@ public class MetricsTest {
 
         String bootstrapServers = parameterTool.get("kafka.bootstrap.servers");
         String groupId = parameterTool.get("kafka.group.id");
-        String topic = parameterTool.get("kafka.topic");
+        String topic = parameterTool.get("kafka.topic.orders");
 
         Properties props = new Properties();
         props.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);

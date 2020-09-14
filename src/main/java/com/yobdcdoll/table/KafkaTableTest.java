@@ -23,7 +23,7 @@ public class KafkaTableTest {
 
         String bootstrapServers = parameterTool.get("kafka.bootstrap.servers");
         String groupId = parameterTool.get("kafka.group.id");
-        String topic = parameterTool.get("kafka.topic");
+        String topic = parameterTool.get("kafka.topic.orders");
 
         EnvironmentSettings envSetting = EnvironmentSettings.newInstance()
                 .useBlinkPlanner()
