@@ -92,7 +92,7 @@ public class KafkaOrderSource {
         Random rand = new Random();
         Date now = currentTime;
         Long orderId = now.getTime();
-        Long shipmentId = now.getTime() + rand.nextInt(5000);
+        Long shipmentId = now.getTime() + rand.nextInt(40000);
         Long createTime = shipmentId;
 
         StringBuilder str = new StringBuilder();
