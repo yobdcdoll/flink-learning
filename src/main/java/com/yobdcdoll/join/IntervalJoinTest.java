@@ -6,6 +6,8 @@ import com.yobdcdoll.source.JdbcSourceTest;
 import com.yobdcdoll.source.OrderKafkaDeserializationSchema;
 import com.yobdcdoll.source.ShipmentKafkaDeserializationSchema;
 import com.yobdcdoll.util.PropConstant;
+import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
+import org.apache.flink.api.common.eventtime.TimestampAssignerSupplier;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -66,11 +68,25 @@ public class IntervalJoinTest {
 
         SingleOutputStreamOperator<Order> orderStream = env.addSource(orderConsumer)
                 .assignTimestampsAndWatermarks(
-                        WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(5))
+                        WatermarkStrategy
+                                .<Order>forBoundedOutOfOrderness(Duration.ofSeconds(5))
+                                .withTimestampAssigner(new SerializableTimestampAssigner<Order>() {
+                                    @Override
+                                    public long extractTimestamp(Order element, long recordTimestamp) {
+                                        return element.getCreateTime();
+                                    }
+                                })
                 );
         SingleOutputStreamOperator<Shipment> shipmentStream = env.addSource(shipmentConsumer)
                 .assignTimestampsAndWatermarks(
-                        WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(5))
+                        WatermarkStrategy
+                                .<Shipment>forBoundedOutOfOrderness(Duration.ofSeconds(5))
+                                .withTimestampAssigner(new SerializableTimestampAssigner<Shipment>() {
+                                    @Override
+                                    public long extractTimestamp(Shipment element, long recordTimestamp) {
+                                        return element.getCreateTime();
+                                    }
+                                })
                 );
 
         DataStream<String> joinedStream = orderStream
@@ -93,10 +109,10 @@ public class IntervalJoinTest {
                         SimpleDateFormat fmt = new SimpleDateFormat("HH:MM:ss");
                         Date shipTime = new Date(shipment.getShipmentId());
                         Date orderTime = new Date(order.getOrderId());
-                        String result = "orderId="+order.getOrderId()
-                                +",orderIdWithShip=" + shipment.getOrderId()
-                                +",orderTime=" + fmt.format(orderTime)
-                                +",shipmentId=" + shipment.getShipmentId()
+                        String result = "orderId=" + order.getOrderId()
+                                + ",orderIdWithShip=" + shipment.getOrderId()
+                                + ",shipmentId=" + shipment.getShipmentId()
+                                + ",orderTime=" + fmt.format(orderTime)
                                 + ",shipmentTime=" + fmt.format(shipTime);
                         out.collect(result);
                     }
