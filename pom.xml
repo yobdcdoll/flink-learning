@@ -51,6 +51,7 @@ under the License.
         <!--        <scope.type>compile</scope.type>-->
         <flink.version>1.11.1</flink.version>
         <hive.version>1.2.2</hive.version>
+        <hadoop.version>2.10.0</hadoop.version>
         <java.version>1.8</java.version>
         <scala.binary.version>2.12</scala.binary.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -148,6 +149,12 @@ under the License.
             <version>${flink.version}</version>
             <scope>${scope.type}</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-orc_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+            <scope>${scope.type}</scope>
+        </dependency>
 
         <!--        <dependency>-->
         <!--            <groupId>org.apache.hadoop</groupId>-->
@@ -160,8 +167,21 @@ under the License.
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-exec</artifactId>
             <version>${hive.version}</version>
-            <scope>provided</scope>
+            <scope>${scope.type}</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.version}</version>
+            <scope>${scope.type}</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-hdfs-client</artifactId>
+            <version>${hadoop.version}</version>
+            <scope>${scope.type}</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -177,6 +197,11 @@ under the License.
             <groupId>io.vertx</groupId>
             <artifactId>vertx-jdbc-client</artifactId>
             <version>3.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.20</version>
         </dependency>
 
         <dependency>
